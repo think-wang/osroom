@@ -628,3 +628,17 @@ function content_inform(cid, ctype, category, details){
     }
     osrHttp("PUT","/api/inform/content",d);
 }
+
+function osr_colors(){
+    var colors = ['#CCCC66', '#CCCCCC','#336666', '#333333',
+     '#666699','#CCFF66',
+      '#999999', '#66CC99', '#CCFF99', '#003366',
+       '#CCFFCC', '#666666', '#FF99CC',
+       '#3399CC',  '#CC99CC', '#CC9933',
+        '#000000', '#339999', '#FFCC33', '#009999',
+        '#CC3333', '#999966', '#996699', '#669999',
+        '#CCCC99', '#336699', '#003333',
+        '#FFCC00', '#99CCFF', '#99CC99', '#66CCCC', '#663333'
+        ]
+    return colors
+}

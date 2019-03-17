@@ -43,7 +43,8 @@
                 <div v-for="rec in rec_1">
                     <a :href="rec.link" target="_blank">
                         <img class="osr-carousel-img" :src="rec.url"  alt="rec.title">
-                        <div class="img-title">{[rec.title]}</div>
+                        <div v-if="rec.title && rec.title!=null" class="img-title">{[rec.title]}</div>
+                        <div v-else style="padding: 7px"></div>
                     </a>
                 </div>
             </div>
@@ -72,6 +73,7 @@
             sort:"t-desc",
             pages:[],
             page:1,
+            tags:{},
             img_w_h:"?w=0&h=120",
       },
       filters: {
@@ -85,6 +87,7 @@
     $(document).ready(function(){
         get_global();
         get_posts(vue.page, vue.sort);
+        get_post_tags();
     })
 
     function get_global(){
@@ -169,6 +172,25 @@
                 vue.posts = r.data.posts;
             }
         });
+    }
+
+    function get_post_tags(){
+        var d ={
+            limit:20,
+            last_days:360
+        }
+
+        var result = osrHttp("GET","/api/post/tags", d, args={not_prompt:true});
+        result.then(function (r) {
+            vue.tags = r.data.tags;
+            var colors = osr_colors();
+            colors.concat(colors);
+            for(var i in vue.tags){
+                vue.tags[i]["color"] = colors[i]
+            }
+
+        });
+
 
     }
 

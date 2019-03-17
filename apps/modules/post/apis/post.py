@@ -5,9 +5,33 @@ from apps.configs.sys_config import METHOD_WARNING
 from apps.core.blueprint import api
 from apps.core.flask.permission import permission_required
 from apps.core.flask.response import response_format
+from apps.modules.post.process.get_post_tags import get_tags
 from apps.modules.post.process.post import get_post, get_posts, post_like
 
 __author__ = 'Allen Woo'
+@api.route('/post/tags', methods=['GET'])
+@permission_required(use_default=False)
+def api_post_tags():
+    '''
+    GET:
+        获取文章tag
+        last_days:<int>, 获取最近几天时间的文章的tag
+        sort:<array>,文章排序规则,优先获取排在前面的文章的标签, 1表示升序, -1表示降序.如:
+            先后按赞(like)数降序, 评论数降序,pv降序, 发布时间降序
+            [{"like": -1}, {"comment_num": -1}, {"pv": -1}]
+            默认时按tag_cnt, like, comment_num 多个降序
+            可选字段有like, pv, comment_num, tag_cnt
+        user_id:<str>, 获取单个用户的文章tag, 默认是全部用户的文章tag
+        limit:<int>, 获取多少个tag
+    :return:
+    '''
+    if request.c_method == "GET":
+        data = get_tags()
+    else:
+        data = {"msg_type":"w", "msg":METHOD_WARNING, "http_status":405}
+    return response_format(data)
+
+
 @api.route('/post', methods=['GET'])
 @permission_required(use_default=False)
 def api_post():
@@ -36,6 +60,7 @@ def api_post():
         unwanted_fields:<array>, 不能和fields参数同时使用,不需要返回的文章字段,如["user_id"]
         user_id:<str>, 如需获取指定用户的post时需要此参数
         category_id:<str>, 获取指定文集的post时需要此参数
+        tag:<str>, 获取存在此tag的posts时需要此参数
 
     '''
 
